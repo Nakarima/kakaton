@@ -16,100 +16,143 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 600.0,
-      child: Form(
-        key: _formKey,
-        child: Column(
-          children: <Widget>[
-            Padding(
-            padding: EdgeInsets.all(10.0),
-              child: Text(
-                "Dodaj zgłoszenie",
-                style: TextStyle(
-                  fontSize: 20.0,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Nowe zgłoszenie'),
+      ),
+      body: ListView(
+        children: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(
+                width: 600.0,
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Text(
+                          "Dodaj zgłoszenie",
+                          style: TextStyle(
+                            fontSize: 20.0,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: TextFormField(
+                          onSaved: (value) => _intervention.description = value,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Wprowadź opis zdarzenia';
+                            }
+                            return null;
+                          },
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          decoration: InputDecoration(
+                            labelText: 'Opis',
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: TextFormField(
+                          onSaved: (value) => _intervention.phone = value,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Wprowadź numer telefonu';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            labelText: 'Numer Telefonu',
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: TextFormField(
+                          onSaved: (value) => _intervention.email = value,
+                          validator: (value) {
+                            Pattern pattern =
+                                r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                            RegExp regex = new RegExp(pattern);
+                            if (!regex.hasMatch(value)) {
+                              return "Wprowadź email";
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            labelText: 'Email',
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: TextFormField(
+                          onSaved: (value) => _intervention.adress = value,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Wprowadź adres';
+                            }
+                            return null;
+                          },
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          decoration: InputDecoration(
+                            labelText: 'Adres',
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: RaisedButton(
+                          color: Colors.amber[300],
+                          onPressed: () {
+                            if (_formKey.currentState.validate()) {
+                              Scaffold.of(context).showSnackBar(
+                                  SnackBar(content: Text('Przetwarzanie')));
+                              _formKey.currentState.save();
+                              _sendDataBack(context);
+                            }
+                          },
+                          child: Text('Wyślij'),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-        ),
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: TextFormField(
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Wprowadź opis zdarzenia';
-                  }
-                  return null;
-                },
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                decoration: InputDecoration(
-                  labelText: 'Opis',
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: TextFormField(
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Wprowadź numer telefonu';
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                  labelText: 'Numer Telefonu',
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: TextFormField(
-                validator: (value) {
-                  Pattern pattern =
-                      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                  RegExp regex = new RegExp(pattern);
-                  if (!regex.hasMatch(value)) {
-                    return "Wprowadź email";
-                  }
-                    return null;
-                },
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: TextFormField(
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Wprowadź adres';
-                  }
-                  return null;
-                },
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                decoration: InputDecoration(
-                  labelText: 'Adres',
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
-              child: RaisedButton(
-                color: Colors.amber[300],
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    Scaffold.of(context)
-                        .showSnackBar(SnackBar(content: Text('Przetwarzanie')));
-                  }
-                },
-                child: Text('Wyślij'),
-              ),
-            ),
-          ],
-        ),
+            ],
+          )
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          if (_formKey.currentState.validate()) {
+            Scaffold.of(context).showSnackBar(
+                SnackBar(content: Text('Przetwarzanie')));
+            _formKey.currentState.save();
+            _sendDataBack(context);
+          }
+        },
       ),
     );
+  }
+
+  void _sendDataBack(BuildContext context) {
+    Intervention result = _intervention;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(_intervention.adress),
+        );
+      },
+    );
+    Navigator.pop(context, result);
   }
 }
