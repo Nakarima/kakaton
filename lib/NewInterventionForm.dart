@@ -1,5 +1,6 @@
 import 'package:flutter_web/material.dart';
 import 'package:kakaton/Models/Intervention.dart';
+import 'package:firebase/firebase.dart';
 
 class NewInterventionForm extends StatefulWidget {
   NewInterventionForm({Key key}) : super(key: key);
@@ -39,7 +40,6 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
                   }
                   return null;
                 },
-                onSaved: ,
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
                 decoration: InputDecoration(
