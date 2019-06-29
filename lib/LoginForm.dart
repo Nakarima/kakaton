@@ -4,18 +4,20 @@ import 'package:kakaton/NewInterventionForm.dart';
 
 
 class LoginForm extends StatefulWidget {
-  LoginForm({Key key}) : auth = fire.auth(), super(key: key);
-  final auth;
+  LoginForm({Key key}) : super(key: key);
 
 
   _LoginFormState createState() => _LoginFormState();
 }
 
 class _LoginFormState extends State<LoginForm> {
+  //_LoginFormState() : auth = fire.auth();
+
+  //final auth;
 
   @override
   void initState() {
-    authListener();
+    //authListener();
     super.initState();
   }
   @override
@@ -49,14 +51,14 @@ class _LoginFormState extends State<LoginForm> {
   void startGoogleLogin() async {
     var provider = fire.GoogleAuthProvider();
     try {
-      await widget.auth.signInWithPopup(provider);
+      await fire.auth().signInWithRedirect(provider);
     } catch (e) {
       print("kupa");
     }
   }
 
   void authListener() {
-    widget.auth.onAuthStateChanged.listen((e) {
+    fire.auth().onAuthStateChanged.listen((e) {
       if (e != null) {
         Navigator.push(
             context,
