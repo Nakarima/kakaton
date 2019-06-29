@@ -8,7 +8,10 @@ environment:
 dependencies:
   flutter_web: any
   flutter_web_ui: any
-  firebase: any
+  firebase: 
+    git: 
+      url: https://github.com/grandnexus/firebase-dart.git
+      ref: feature/cloud-functions
   googleapis_auth: any
   service_worker: any
 

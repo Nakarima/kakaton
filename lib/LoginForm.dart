@@ -1,5 +1,5 @@
 import 'package:flutter_web/material.dart';
-import 'package:firebase/firebase.dart' as fire;
+import 'package:firebase/firebase.dart' as firebase;
 import 'package:kakaton/NewInterventionForm.dart';
 
 
@@ -11,13 +11,13 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  //_LoginFormState() : auth = fire.auth();
+  _LoginFormState() : auth = firebase.auth();
 
-  //final auth;
+  final auth;
 
   @override
   void initState() {
-    //authListener();
+    authListener();
     super.initState();
   }
   @override
@@ -49,16 +49,16 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void startGoogleLogin() async {
-    var provider = fire.GoogleAuthProvider();
+    var provider = firebase.GoogleAuthProvider();
     try {
-      await fire.auth().signInWithRedirect(provider);
+      await firebase.auth().signInWithPopup(provider);
     } catch (e) {
-      print("kupa");
+      print(e);
     }
   }
 
   void authListener() {
-    fire.auth().onAuthStateChanged.listen((e) {
+    firebase.auth().onAuthStateChanged.listen((e) {
       if (e != null) {
         Navigator.push(
             context,
