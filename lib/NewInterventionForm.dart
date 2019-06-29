@@ -12,7 +12,7 @@ class NewInterventionForm extends StatefulWidget {
 class _NewInterventionFormState extends State<NewInterventionForm> {
   final _formKey = GlobalKey<FormState>();
 
-  Intervention _intervention;
+  Intervention _intervention = new Intervention();
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
                       Padding(
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
-                          onSaved: (value) => _intervention.description = value,
+                          onSaved: (value) { _intervention.description = value; },
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Wprowadź opis zdarzenia';
@@ -60,7 +60,7 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
                       Padding(
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
-                          onSaved: (value) => _intervention.phone = value,
+                          onSaved: (value) { _intervention.phone = value; },
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Wprowadź numer telefonu';
@@ -75,7 +75,7 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
                       Padding(
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
-                          onSaved: (value) => _intervention.email = value,
+                          onSaved: (value) { _intervention.email = value; },
                           validator: (value) {
                             Pattern pattern =
                                 r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
@@ -93,7 +93,7 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
                       Padding(
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
-                          onSaved: (value) => _intervention.adress = value,
+                          onSaved: (value) { _intervention.adress = value; },
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Wprowadź adres';
@@ -112,10 +112,8 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
                         child: RaisedButton(
                           color: Colors.amber[300],
                           onPressed: () {
+
                             if (_formKey.currentState.validate()) {
-                              Scaffold.of(context).showSnackBar(
-                                  SnackBar(content: Text('Przetwarzanie')));
-                              _formKey.currentState.save();
                               _sendDataBack(context);
                             }
                           },
@@ -130,29 +128,31 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
           )
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (_formKey.currentState.validate()) {
-            Scaffold.of(context).showSnackBar(
-                SnackBar(content: Text('Przetwarzanie')));
-            _formKey.currentState.save();
-            _sendDataBack(context);
-          }
-        },
-      ),
     );
   }
 
   void _sendDataBack(BuildContext context) {
+    _formKey.currentState.save();
+    _intervention.dateTime = DateTime.now();
     Intervention result = _intervention;
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        // return object of type Dialog
         return AlertDialog(
-          title: Text(_intervention.adress),
+          title: new Text("Zgłoszenie wysłane"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Zamknij"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
         );
       },
     );
-    Navigator.pop(context, result);
+    //Navigator.pop(context, result);
   }
 }

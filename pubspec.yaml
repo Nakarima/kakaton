@@ -9,6 +9,9 @@ dependencies:
   flutter_web: any
   flutter_web_ui: any
   firebase: any
+  googleapis_auth: any
+  service_worker: any
+
 
 dev_dependencies:
   build_runner: ^1.4.0
