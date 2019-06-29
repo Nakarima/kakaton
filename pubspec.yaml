@@ -9,6 +9,8 @@ dependencies:
   flutter_web: any
   flutter_web_ui: any
   firebase: any
+  flutter_facebook_login: ^2.0.1
+
 
 dev_dependencies:
   build_runner: ^1.4.0
