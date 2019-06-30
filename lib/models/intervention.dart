@@ -58,7 +58,7 @@ class Intervention {
       });
 
       _comments.clear();
-      _comments.addAll(newList);
+      _comments.addAll(newList.reversed);
 
       return _comments;
     });
