@@ -1,7 +1,6 @@
 import 'package:flutter_web/material.dart';
 import 'package:firebase/firebase.dart' as firebase;
 
-
 class MapPage extends StatefulWidget {
   MapPage({Key key}) : super(key: key);
 
@@ -21,7 +20,12 @@ class _MapPageState extends State<MapPage> {
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             DrawerHeader(
-              child: Text("Menu"),
+              child: Text(
+                "Menu",
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
             ),
             InkWell(
                 onTap: null,
@@ -31,7 +35,7 @@ class _MapPageState extends State<MapPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                          "Mapa",
+                        "Mapa",
                         style: TextStyle(
                           color: Colors.amber,
                         ),
@@ -39,17 +43,16 @@ class _MapPageState extends State<MapPage> {
                       Padding(
                         padding: EdgeInsets.all(3.0),
                       ),
-                      Icon(Icons.map),
+                      Icon(
+                        Icons.map,
+                        color: Colors.amber,
+                      ),
                     ],
                   ),
                 )),
             InkWell(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MapPage(),
-                      ));
+                  Navigator.pushNamedAndRemoveUntil(context, '/inspectorNew', (Route<dynamic> route) => false);
                 },
                 child: Padding(
                   padding: EdgeInsets.all(10.0),
@@ -66,11 +69,8 @@ class _MapPageState extends State<MapPage> {
                 )),
             InkWell(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MapPage(),
-                      ));
+                  Navigator.pushNamedAndRemoveUntil(context, '/list', (Route<dynamic> route) => false);
+
                 },
                 child: Padding(
                   padding: EdgeInsets.all(10.0),
@@ -88,8 +88,8 @@ class _MapPageState extends State<MapPage> {
             InkWell(
                 onTap: () {
                   firebase.auth().signOut();
-                  Navigator.popUntil(
-                      context, ModalRoute.withName(Navigator.defaultRouteName));
+                  Navigator.pushNamedAndRemoveUntil(context, '/login', (Route<dynamic> route) => false);
+
                 },
                 child: Padding(
                   padding: EdgeInsets.all(10.0),

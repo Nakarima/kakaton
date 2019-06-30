@@ -86,11 +86,10 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                   onPressed: () {
 
-                    Navigator.push(
+                    Navigator.pushNamed(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => InspectorLoginForm(),
-                        ));
+                       '/loginInspector',
+                    );
                   },
                   child: Text('Zaloguj jako inspektor'),
                 )
@@ -114,11 +113,9 @@ class _LoginFormState extends State<LoginForm> {
   void authListener() {
     firebase.auth().onAuthStateChanged.listen((e) {
       if (e != null) {
-        Navigator.push(
+        Navigator.pushReplacementNamed(
             context,
-            MaterialPageRoute(
-              builder: (context) => NewInterventionForm(),
-            ));
+            'normalUser');
       }
     });
   }
