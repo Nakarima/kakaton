@@ -1,5 +1,6 @@
 import 'package:flutter_web/material.dart';
 import 'package:kakaton/models/intervention.dart';
+import 'package:kakaton/models/comment.dart';
 import 'package:kakaton/models/store.dart';
 import 'package:intl/intl.dart';
 import 'package:kakaton/intervention_edit.dart';
@@ -142,7 +143,7 @@ class _InterventionDetailsState extends State<InterventionDetails> {
               "Komentarze:"
             ),
           ),
-         /* StreamBuilder<List<Comment>>(
+          StreamBuilder<List<Comment>>(
             stream: widget.intervention.get(),
             builder: (BuildContext context,
                 AsyncSnapshot<List<Comment>> snapshot) {
@@ -204,7 +205,7 @@ class _InterventionDetailsState extends State<InterventionDetails> {
                   );
               }
             },
-          ),*/
+          ),
         ],
       ),
     );

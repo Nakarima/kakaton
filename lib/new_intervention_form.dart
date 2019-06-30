@@ -13,7 +13,9 @@ class NewInterventionForm extends StatefulWidget {
 class _NewInterventionFormState extends State<NewInterventionForm> {
   final _formKey = GlobalKey<FormState>();
 
-  Intervention _intervention = new Intervention();
+  String description;
+  String phone;
+  String adress;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +72,7 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
                           onSaved: (value) {
-                            _intervention.description = value;
+                            description = value;
                           },
                           validator: (value) {
                             if (value.isEmpty) {
@@ -89,7 +91,7 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
                           onSaved: (value) {
-                            _intervention.phone = value;
+                            phone = value;
                           },
                           validator: (value) {
                             if (value.isEmpty) {
@@ -109,7 +111,7 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
                           onSaved: (value) {
-                            _intervention.adress = value;
+                            adress = value;
                           },
                           validator: (value) {
                             if (value.isEmpty) {
@@ -152,15 +154,14 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
 
   void _sendDataBack(BuildContext context) async {
     _formKey.currentState.save();
-    _intervention.dateTime = DateTime.now();
     Intervention key;
     key = await store.interventions.add();
     if (key != null) {
       await store.interventions.submit(
           intervention: key,
-          description: _intervention.description,
-          phone: _intervention.phone,
-          location: _intervention.adress);
+          description: description,
+          phone: phone,
+          location: adress);
     }
     await showDialog(
       context: context,
