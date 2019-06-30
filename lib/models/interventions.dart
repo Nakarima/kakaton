@@ -27,7 +27,7 @@ class Interventions {
         newList.add(obj);
 
         obj
-          ..dateTime = DateTime.now()
+          ..dateTime = DateTime.parse(data["date"])
           ..contact = data["reporter"]
           ..description = data["desc"]
           ..phone = data["phone"]
@@ -77,7 +77,7 @@ class Interventions {
             'location': location,
             'phone': phone
           });
-        
+
     } catch (e) {
 
       print(e);
