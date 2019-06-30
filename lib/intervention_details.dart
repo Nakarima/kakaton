@@ -1,7 +1,9 @@
 import 'package:flutter_web/material.dart';
 import 'package:kakaton/models/intervention.dart';
+import 'package:kakaton/models/comment.dart';
 import 'package:intl/intl.dart';
 import 'package:kakaton/intervention_edit.dart';
+import 'package:kakaton/new_comment.dart';
 
 class InterventionDetails extends StatefulWidget {
   InterventionDetails({Key key, this.intervention}) : super(key: key);
@@ -101,10 +103,8 @@ class _InterventionDetailsState extends State<InterventionDetails> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  InterventionEdit(
-                                      intervention:
-                                      widget.intervention)));
+                              builder: (context) => InterventionEdit(
+                                  intervention: widget.intervention)));
                     },
                     child: Text('Edytuj'),
                   ),
@@ -113,7 +113,13 @@ class _InterventionDetailsState extends State<InterventionDetails> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => NewCommentForm(
+                                  intervention: widget.intervention)));
+                    },
                     child: Text('Dodaj Komentarz'),
                   ),
                   RaisedButton(
@@ -130,10 +136,80 @@ class _InterventionDetailsState extends State<InterventionDetails> {
               )
             ],
           ),
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: Text(
+              "Komentarze:"
+            ),
+          ),
+          StreamBuilder<List<Comment>>(
+            stream: widget.intervention.get(),
+            builder: (BuildContext context,
+                AsyncSnapshot<List<Comment>> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                default:
+                  if (snapshot.data.isEmpty) {
+                    return Center(
+                      child: Text("Brak komentarzy"),
+                    );
+                  }
+                  return ListView.builder(
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          SizedBox(
+                            height: 250,
+                            width: 350,
+                            child: Padding(
+                              padding: EdgeInsets.all(5.0),
+                              child: Card(
+                                child: InkWell(
+                                  child: Container(
+                                    width: 100,
+                                    height: 50,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.all(5.0),
+                                          child: Text(
+                                              "Data: ${DateFormat('yyyy-MM-dd kk:mm').format(snapshot.data[index].dateTime)}"),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 5.0, bottom: 10.0),
+                                          child: Text(
+                                              "${snapshot.data[index].description}"),
+                                        ),
+
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      );
+                    },
+                  );
+              }
+            },
+          ),
         ],
       ),
     );
   }
+
   void _delete() {
     showDialog(
       context: context,

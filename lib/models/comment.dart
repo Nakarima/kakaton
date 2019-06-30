@@ -1,6 +1,6 @@
 class Comment {
-  final DateTime dateTime;
-  final String description;
+  DateTime dateTime;
+  String description;
 
   Comment({this.dateTime, this.description});
 }
