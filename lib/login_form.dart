@@ -108,6 +108,7 @@ class _LoginFormState extends State<LoginForm> {
     }
   }
 
+
   void authListener() {
     firebase.auth().onAuthStateChanged.listen((e) {
       if (e != null) {

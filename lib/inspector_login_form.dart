@@ -12,6 +12,8 @@ class _InspectorLoginFormState extends State<InspectorLoginForm> {
 
   final auth;
   final _formKey = GlobalKey<FormState>();
+  String email;
+  String password;
 
   @override
   void initState() {
@@ -43,6 +45,7 @@ class _InspectorLoginFormState extends State<InspectorLoginForm> {
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
                           onSaved: (value) {
+                            email = value;
                           },
                           validator: (value) {
                             if (value.isEmpty) {
@@ -60,6 +63,7 @@ class _InspectorLoginFormState extends State<InspectorLoginForm> {
                         child: TextFormField(
                           obscureText: true,
                           onSaved: (value) {
+                            password = value;
                           },
                           validator: (value) {
                             if (value.isEmpty) {
@@ -83,8 +87,9 @@ class _InspectorLoginFormState extends State<InspectorLoginForm> {
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
                               //TODO zmienic na normalna funkcje
+                              _formKey.currentState.save();
+                              startInspectorLogin();
 
-                              Navigator.pushNamedAndRemoveUntil(context, '/map', (Route<dynamic> route) => false);
                             }
                           },
                           child: Text('Zaloguj'),
@@ -103,6 +108,15 @@ class _InspectorLoginFormState extends State<InspectorLoginForm> {
   }
 
  // TODO logowanie
+
+  void startInspectorLogin() async {
+    var provider = firebase.EmailAuthProvider();
+    try {
+      await firebase.auth().signInWithEmailAndPassword(email, password);
+    } catch(e) {
+      print(e);
+    }
+  }
 
   void authListener() {
     firebase.auth().onAuthStateChanged.listen((e) {
