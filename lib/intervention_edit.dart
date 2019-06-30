@@ -1,23 +1,28 @@
 import 'package:flutter_web/material.dart';
 import 'package:kakaton/models/intervention.dart';
 import 'package:firebase/firebase.dart' as firebase;
-import 'package:kakaton/map_page.dart';
 import 'package:intl/intl.dart';
-import 'package:kakaton/interventions_list.dart';
 
-class InspectorInterventionForm extends StatefulWidget {
-  InspectorInterventionForm({Key key}) : super(key: key);
+class InterventionEdit extends StatefulWidget {
+  InterventionEdit({Key key, this.intervention}) : super(key: key);
+
+  final Intervention intervention;
 
   @override
-  _InspectorInterventionFormState createState() =>
-      _InspectorInterventionFormState();
+  _interventionEditState createState() => _interventionEditState();
 }
 
-class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
+class _interventionEditState extends State<InterventionEdit> {
   final _formKey = GlobalKey<FormState>();
 
-  Intervention _intervention = new Intervention();
   DateTime selectedDate = DateTime.now();
+  List _statuses =
+  ["creating", "pendingVerification", "pendingAction", "inProgress", "closed"];
+
+  List<DropdownMenuItem<String>> _dropDownMenuItems;
+
+
+
 
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime datePicked = await showDatePicker(
@@ -47,107 +52,32 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
       });
   }
 
+
+  @override
+  void initState() {
+    _dropDownMenuItems = getDropDownMenuItems();
+    super.initState();
+  }
+  // here we are creating the list needed for the DropDownButton
+  List<DropdownMenuItem<String>> getDropDownMenuItems() {
+    List<DropdownMenuItem<String>> items = new List();
+    for (String status in _statuses) {
+      // here we are creating the drop down menu items, you can customize the item right here
+      // but I'll just use a simple text for this
+      items.add(new DropdownMenuItem(
+          value: status,
+          child: new Text(status)
+      ));
+    }
+    return items;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dodaj nowe zgłoszenie'),
+        title: Text('Edytuj zgłoszenie'),
         centerTitle: true,
-      ),
-      drawer: Drawer(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            DrawerHeader(
-              child: Text(
-                "Menu",
-                style: TextStyle(
-                  fontSize: 20,
-                ),
-              ),
-            ),
-            InkWell(
-                onTap: () {
-                  Navigator.pushNamedAndRemoveUntil(context, '/map', (Route<dynamic> route) => false);
-
-                },
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "Mapa",
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(3.0),
-                      ),
-                      Icon(Icons.map),
-                    ],
-                  ),
-                )),
-            InkWell(
-                onTap: null,
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "Dodaj zgłoszenie",
-                        style: TextStyle(
-                          color: Colors.amber,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(3.0),
-                      ),
-                      Icon(
-                        Icons.add,
-                        color: Colors.amber,
-                      ),
-                    ],
-                  ),
-                )),
-            InkWell(
-                onTap: () {
-                  Navigator.pushNamedAndRemoveUntil(context, '/list', (Route<dynamic> route) => false);
-
-                },
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text("Lista zgłoszeń"),
-                      Padding(
-                        padding: EdgeInsets.all(3.0),
-                      ),
-                      Icon(Icons.library_books),
-                    ],
-                  ),
-                )),
-            InkWell(
-                onTap: () {
-                  firebase.auth().signOut();
-                  Navigator.pushNamedAndRemoveUntil(context, '/login', (Route<dynamic> route) => false);
-
-                },
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text("Wyloguj się"),
-                      Padding(
-                        padding: EdgeInsets.all(3.0),
-                      ),
-                      Icon(Icons.exit_to_app),
-                    ],
-                  ),
-                ))
-          ],
-        ),
       ),
       body: ListView(
         children: <Widget>[
@@ -163,8 +93,9 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
                       Padding(
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
+                          initialValue: widget.intervention.description,
                           onSaved: (value) {
-                            _intervention.description = value;
+                            widget.intervention.description = value;
                           },
                           validator: (value) {
                             if (value.isEmpty) {
@@ -182,8 +113,52 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
                       Padding(
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
+                          initialValue: widget.intervention.contact,
+
                           onSaved: (value) {
-                            _intervention.phone = value;
+                            widget.intervention.contact = value;
+                          },
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Wprowadź imie i nazwisko';
+                            }
+                            return null;
+                          },
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          decoration: InputDecoration(
+                            labelText: 'Imie i nazwisko',
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: TextFormField(
+                          initialValue: widget.intervention.email,
+
+                          onSaved: (value) {
+                            widget.intervention.email = value;
+                          },
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Wprowadź email';
+                            }
+                            return null;
+                          },
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
+                          decoration: InputDecoration(
+                            labelText: 'Email',
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: TextFormField(
+                          initialValue: widget.intervention.phone,
+
+                          onSaved: (value) {
+                            widget.intervention.phone = value;
                           },
                           validator: (value) {
                             if (value.isEmpty) {
@@ -202,8 +177,10 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
                       Padding(
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
+                          initialValue: widget.intervention.adress,
+
                           onSaved: (value) {
-                            _intervention.adress = value;
+                            widget.intervention.adress = value;
                           },
                           validator: (value) {
                             if (value.isEmpty) {
@@ -260,6 +237,23 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
                         ),
                       ),
                       Padding(
+                        padding: EdgeInsets.all(10),
+                      ),
+                      new Text(
+                        "status",
+                        style: TextStyle(
+                          fontSize: 20.0,
+                        ),
+                      ),
+                      new Container(
+                        padding: new EdgeInsets.all(3.0),
+                      ),
+                      new DropdownButton(
+                        value: widget.intervention.status,
+                        items: _dropDownMenuItems,
+                        onChanged: changedDropDownItem,
+                      ),
+                      Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10.0),
                         child: RaisedButton(
                           color: Colors.amber[300],
@@ -287,13 +281,14 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
 
   void _sendDataBack(BuildContext context) {
     _formKey.currentState.save();
-    Intervention result = _intervention;
+    widget.intervention.dateTime = DateTime.now();
+    Intervention result = widget.intervention;
     showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Zgłoszenie wysłane"),
+          title: new Text("Zgłoszenie edytowane"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
@@ -307,5 +302,11 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
       },
     );
     //Navigator.pop(context, result);
+  }
+
+  void changedDropDownItem(String status) {
+    setState(() {
+      widget.intervention.status = status;
+    });
   }
 }
