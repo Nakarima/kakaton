@@ -1,6 +1,7 @@
 import 'package:flutter_web/material.dart';
 import 'package:kakaton/models/intervention.dart';
 import 'package:intl/intl.dart';
+import 'package:kakaton/intervention_edit.dart';
 
 class InterventionDetails extends StatefulWidget {
   InterventionDetails({Key key, this.intervention}) : super(key: key);
@@ -96,7 +97,15 @@ class _InterventionDetailsState extends State<InterventionDetails> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  InterventionEdit(
+                                      intervention:
+                                      widget.intervention)));
+                    },
                     child: Text('Edytuj'),
                   ),
                   RaisedButton(
@@ -112,7 +121,9 @@ class _InterventionDetailsState extends State<InterventionDetails> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      _delete();
+                    },
                     child: Text('Usuń'),
                   ),
                 ],
@@ -121,6 +132,38 @@ class _InterventionDetailsState extends State<InterventionDetails> {
           ),
         ],
       ),
+    );
+  }
+  void _delete() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Usunąć interwencje?"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                new FlatButton(
+                  child: new Text("Tak"),
+                  onPressed: () {
+                    Navigator.of(context).pop(); //TODO usuwanko
+                  },
+                ),
+                new FlatButton(
+                  child: new Text("Nie"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            )
+          ],
+        );
+      },
     );
   }
 }
