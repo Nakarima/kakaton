@@ -15,6 +15,9 @@ class InterventionDetails extends StatefulWidget {
 }
 
 class _InterventionDetailsState extends State<InterventionDetails> {
+  final _formKey = GlobalKey<FormState>();
+  String description;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,20 +118,6 @@ class _InterventionDetailsState extends State<InterventionDetails> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => NewCommentForm(
-                                  intervention: widget.intervention)));
-                    },
-                    child: Text('Dodaj Komentarz'),
-                  ),
-                  RaisedButton(
-                    color: Colors.amber[300],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    onPressed: () {
                       _delete();
                     },
                     child: Text('Usuń'),
@@ -139,14 +128,56 @@ class _InterventionDetailsState extends State<InterventionDetails> {
           ),
           Padding(
             padding: EdgeInsets.all(10),
-            child: Text(
-              "Komentarze:"
+            child: Text("Komentarze:"),
+          ),
+          SizedBox(
+            width: 600.0,
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: TextFormField(
+                      onSaved: (value) {
+                        description = value;
+                      },
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Wprowadź opis';
+                        }
+                        return null;
+                      },
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      decoration: InputDecoration(
+                        labelText: 'Opis',
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: RaisedButton(
+                      color: Colors.amber[300],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      onPressed: () {
+                        if (_formKey.currentState.validate()) {
+                          _sendDataBack(context);
+                        }
+                      },
+                      child: Text('Wyślij komentarz'),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           StreamBuilder<List<Comment>>(
             stream: widget.intervention.get(),
-            builder: (BuildContext context,
-                AsyncSnapshot<List<Comment>> snapshot) {
+            builder:
+                (BuildContext context, AsyncSnapshot<List<Comment>> snapshot) {
               if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               }
@@ -198,7 +229,6 @@ class _InterventionDetailsState extends State<InterventionDetails> {
                                           child: Text(
                                               "${snapshot.data[index].description}"),
                                         ),
-
                                       ],
                                     ),
                                   ),
@@ -221,6 +251,31 @@ class _InterventionDetailsState extends State<InterventionDetails> {
     );
   }
 
+  void _sendDataBack(BuildContext context) {
+    _formKey.currentState.save();
+    widget.intervention.addComment(description: description);
+    // Todo add to intervention
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Komentarz dodany"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Zamknij"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+    //Navigator.pop(context, result);
+  }
+
   void _delete() async {
     await showDialog(
       context: context,
@@ -237,8 +292,11 @@ class _InterventionDetailsState extends State<InterventionDetails> {
                 new FlatButton(
                   child: new Text("Tak"),
                   onPressed: () {
-                    store.interventions.delete(intervention: widget.intervention);
-                    Navigator.pushNamedAndRemoveUntil(context, '/list', (Route<dynamic> route) => false);                  },
+                    store.interventions
+                        .delete(intervention: widget.intervention);
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/list', (Route<dynamic> route) => false);
+                  },
                 ),
                 new FlatButton(
                   child: new Text("Nie"),
