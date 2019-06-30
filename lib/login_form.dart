@@ -113,7 +113,7 @@ class _LoginFormState extends State<LoginForm> {
       if (e != null) {
         Navigator.pushReplacementNamed(
             context,
-            'normalUser');
+            '/normalUser');
       }
     });
   }

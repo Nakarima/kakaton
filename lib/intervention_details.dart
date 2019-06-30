@@ -142,7 +142,7 @@ class _InterventionDetailsState extends State<InterventionDetails> {
               "Komentarze:"
             ),
           ),
-          StreamBuilder<List<Comment>>(
+         /* StreamBuilder<List<Comment>>(
             stream: widget.intervention.get(),
             builder: (BuildContext context,
                 AsyncSnapshot<List<Comment>> snapshot) {
@@ -204,7 +204,7 @@ class _InterventionDetailsState extends State<InterventionDetails> {
                   );
               }
             },
-          ),
+          ),*/
         ],
       ),
     );
