@@ -153,11 +153,11 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
   void _sendDataBack(BuildContext context) async {
     _formKey.currentState.save();
     _intervention.dateTime = DateTime.now();
-    String key;
+    Intervention key;
     key = await store.interventions.add();
     if (key != null) {
       await store.interventions.submit(
-          key: key,
+          intervention: key,
           description: _intervention.description,
           phone: _intervention.phone,
           location: _intervention.adress);

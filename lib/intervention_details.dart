@@ -1,6 +1,6 @@
 import 'package:flutter_web/material.dart';
 import 'package:kakaton/models/intervention.dart';
-import 'package:kakaton/models/comment.dart';
+import 'package:kakaton/models/store.dart';
 import 'package:intl/intl.dart';
 import 'package:kakaton/intervention_edit.dart';
 import 'package:kakaton/new_comment.dart';
@@ -210,8 +210,8 @@ class _InterventionDetailsState extends State<InterventionDetails> {
     );
   }
 
-  void _delete() {
-    showDialog(
+  void _delete() async {
+    await showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
@@ -226,8 +226,8 @@ class _InterventionDetailsState extends State<InterventionDetails> {
                 new FlatButton(
                   child: new Text("Tak"),
                   onPressed: () {
-                    Navigator.of(context).pop(); //TODO usuwanko
-                  },
+                    store.interventions.delete(intervention: widget.intervention);
+                    Navigator.pushNamedAndRemoveUntil(context, '/list', (Route<dynamic> route) => false);                  },
                 ),
                 new FlatButton(
                   child: new Text("Nie"),
