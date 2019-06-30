@@ -69,7 +69,7 @@ class Intervention {
     try {
 
       final result = 
-        await firebase.functions().httpsCallable('deleteReport').call({
+        await firebase.functions().httpsCallable('addCommentToReport').call({
             'key': this.key,
             'text': description
           });
