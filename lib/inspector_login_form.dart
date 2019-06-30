@@ -1,6 +1,6 @@
 import 'package:flutter_web/material.dart';
 import 'package:firebase/firebase.dart' as firebase;
-import 'package:kakaton/MapPage.dart';
+import 'package:kakaton/map_page.dart';
 
 class InspectorLoginForm extends StatefulWidget {
   InspectorLoginForm({Key key}) : super(key: key);

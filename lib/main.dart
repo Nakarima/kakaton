@@ -1,5 +1,5 @@
 import 'package:flutter_web/material.dart';
-import 'package:kakaton/LoginForm.dart';
+import 'package:kakaton/login_form.dart';
 import 'package:firebase/firebase.dart' as firebase;
 
 void main() {
