@@ -1,4 +1,5 @@
 class Intervention {
+  String key;
   DateTime dateTime;
   String contact;
   String description;
@@ -8,11 +9,12 @@ class Intervention {
   String adress;
 
   Intervention({
-    this.dateTime,
-    this.contact,
-    this.description,
-    this.phone,
-    this.email,
-    this.status,
-    this.adress});
+    this.key,
+    this.dateTime:null,
+    this.contact:null,
+    this.description:null,
+    this.phone:null,
+    this.email:null,
+    this.status:null,
+    this.adress:null});
 }

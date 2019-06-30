@@ -3,22 +3,38 @@ import 'package:firebase/firebase.dart' as firebase;
 import 'package:kakaton/models/intervention.dart';
 
 class Interventions {
+  final List<Intervention> _list = List<Intervention>();
+
   Stream<List<Intervention>> get() {
     var ref = firebase.database().ref("interventions");
 
     return ref.onValue.map((queryEvent) {
       var snapshot = queryEvent.snapshot;
 
-      return (snapshot.val() as Map<String, dynamic>).values.map((e) {
-        return Intervention(
-          dateTime: DateTime.now(),
-          contact: e["reporter"],
-          description: e["desc"],
-          phone: e["phone"],
-          email: e["email"],
-          status: e["status"],
-          adress: e["location"]);
-      }).toList();
+      (snapshot.val() as Map<String, dynamic>).forEach((key, data) {
+        
+        var obj = _list.firstWhere(
+          (x) => x.key == key,
+          orElse: () => null);
+
+        if (obj == null) {
+
+          obj = Intervention(key: key);
+
+          _list.add(obj);
+        }
+
+        obj
+          ..dateTime = DateTime.now()
+          ..contact = data["reporter"]
+          ..description = data["desc"]
+          ..phone = data["phone"]
+          ..email = data["email"]
+          ..status = data["status"]
+          ..adress = data["location"];
+      });
+
+      return _list;
     });
   }
 
@@ -53,8 +69,6 @@ class Interventions {
     } catch (e) {
 
       print(e);
-
-      return null;
     }
   }
 }
