@@ -1,6 +1,5 @@
 import 'package:flutter_web/material.dart';
 import 'package:kakaton/models/intervention.dart';
-import 'package:firebase/firebase.dart' as firebase;
 import 'package:intl/intl.dart';
 
 class InterventionEdit extends StatefulWidget {
@@ -15,7 +14,16 @@ class InterventionEdit extends StatefulWidget {
 class _interventionEditState extends State<InterventionEdit> {
   final _formKey = GlobalKey<FormState>();
 
-  DateTime selectedDate = DateTime.now();
+  String description;
+  String contact;
+  String name;
+  String adress;
+  String status;
+  String phone;
+  String email;
+
+
+  DateTime selectedDate;
   List _statuses =
   ["creating", "pendingVerification", "pendingAction", "inProgress", "closed"];
 
@@ -55,6 +63,8 @@ class _interventionEditState extends State<InterventionEdit> {
 
   @override
   void initState() {
+    selectedDate = widget.intervention.dateTime;
+    status = widget.intervention.status;
     _dropDownMenuItems = getDropDownMenuItems();
     super.initState();
   }
@@ -95,7 +105,7 @@ class _interventionEditState extends State<InterventionEdit> {
                         child: TextFormField(
                           initialValue: widget.intervention.description,
                           onSaved: (value) {
-                            widget.intervention.description = value;
+                            description = value;
                           },
                           validator: (value) {
                             if (value.isEmpty) {
@@ -116,7 +126,7 @@ class _interventionEditState extends State<InterventionEdit> {
                           initialValue: widget.intervention.contact,
 
                           onSaved: (value) {
-                            widget.intervention.contact = value;
+                            contact = value;
                           },
                           validator: (value) {
                             if (value.isEmpty) {
@@ -137,7 +147,7 @@ class _interventionEditState extends State<InterventionEdit> {
                           initialValue: widget.intervention.email,
 
                           onSaved: (value) {
-                            widget.intervention.email = value;
+                            email = value;
                           },
                           validator: (value) {
                             if (value.isEmpty) {
@@ -158,7 +168,7 @@ class _interventionEditState extends State<InterventionEdit> {
                           initialValue: widget.intervention.phone,
 
                           onSaved: (value) {
-                            widget.intervention.phone = value;
+                            phone = value;
                           },
                           validator: (value) {
                             if (value.isEmpty) {
@@ -180,7 +190,7 @@ class _interventionEditState extends State<InterventionEdit> {
                           initialValue: widget.intervention.adress,
 
                           onSaved: (value) {
-                            widget.intervention.adress = value;
+                            adress = value;
                           },
                           validator: (value) {
                             if (value.isEmpty) {
@@ -249,7 +259,7 @@ class _interventionEditState extends State<InterventionEdit> {
                         padding: new EdgeInsets.all(3.0),
                       ),
                       new DropdownButton(
-                        value: widget.intervention.status,
+                        value: status,
                         items: _dropDownMenuItems,
                         onChanged: changedDropDownItem,
                       ),
@@ -281,8 +291,7 @@ class _interventionEditState extends State<InterventionEdit> {
 
   void _sendDataBack(BuildContext context) {
     _formKey.currentState.save();
-    widget.intervention.dateTime = DateTime.now();
-    Intervention result = widget.intervention;
+    widget.intervention.edit(dateTime: selectedDate, contact: contact, description: description, phone: phone, email: email, location: adress, status: status);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -292,9 +301,9 @@ class _interventionEditState extends State<InterventionEdit> {
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text("Zamknij"),
+              child: new Text("Powrót"),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.pushNamedAndRemoveUntil(context, '/list', (Route<dynamic> route) => false);
               },
             ),
           ],
@@ -304,9 +313,9 @@ class _interventionEditState extends State<InterventionEdit> {
     //Navigator.pop(context, result);
   }
 
-  void changedDropDownItem(String status) {
+  void changedDropDownItem(String newStatus) {
     setState(() {
-      widget.intervention.status = status;
+      status = newStatus;
     });
   }
 }
