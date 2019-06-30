@@ -13,11 +13,11 @@ class Interventions {
         return Intervention(
           dateTime: DateTime.now(),
           contact: "test",
-          description: "test",
-          phone: "test",
-          email: "test@test.com",
-          status: "asdasd",
-          adress: "asdasd");
+          description: e["desc"],
+          phone: e["phone"],
+          email: e["email"],
+          status: e["status"],
+          adress: e["location"]);
       }).toList();
     });
   }
