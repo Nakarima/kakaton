@@ -127,11 +127,13 @@ class _InterventionsListState extends State<InterventionsList> {
             return Text('Error: ${snapshot.error}');
           }
           switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
             default:
+              if (snapshot.data == null) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
               if (snapshot.data.isEmpty) {
                 return Center(
                   child: Text("Brak interwencji"),
