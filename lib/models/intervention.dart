@@ -28,7 +28,7 @@ class Intervention {
 
     return ref.onValue.map((queryEvent) {
       var snapshotVal = queryEvent.snapshot.val() as Map<String, dynamic>;
-      
+
       if (snapshotVal == null) {
 
         return _comments;
@@ -63,6 +63,37 @@ class Intervention {
 
       return _comments;
     });
+  }
+
+  Future edit({
+    DateTime dateTime,
+    String contact,
+    String description,
+    String phone,
+    String email,
+    String status,
+    String location
+    }) async {
+
+    try {
+
+      final result = 
+        await firebase.functions().httpsCallable('editIntervention').call({
+            'key': this.key,
+            'date': dateTime.toIso8601String(),
+            'reporter': contact,
+            'desc': description,
+            'phone': phone,
+            'email': email,
+            'status': status,
+            'location': location
+          });
+
+
+    } catch (e) {
+
+      print (e);
+    }
   }
 
   Future addComment({String description}) async {
