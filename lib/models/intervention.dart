@@ -53,7 +53,6 @@ class Intervention {
 
         obj
           ..dateTime = DateTime.parse(data["date"])
-          ..author = data["author"]
           ..authorEmail = data["authorEmail"]
           ..description = data["text"];
       });
