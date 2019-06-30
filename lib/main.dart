@@ -1,5 +1,5 @@
 import 'package:flutter_web/material.dart';
-import 'package:kakaton/MapPage.dart';
+import 'package:kakaton/LoginForm.dart';
 import 'package:firebase/firebase.dart' as firebase;
 
 void main() {
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.amber,
         fontFamily: 'RobotoMono',
       ),
-      home: MapPage(),//asdd
+      home: LoginForm(),//asdd
     );
   }
 }
