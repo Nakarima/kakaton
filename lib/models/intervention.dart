@@ -27,11 +27,16 @@ class Intervention {
     var ref = firebase.database().ref("interventions/" + key + "/comments");
 
     return ref.onValue.map((queryEvent) {
-      var snapshot = queryEvent.snapshot;
+      var snapshotVal = queryEvent.snapshot.val() as Map<String, dynamic>;
+      
+      if (snapshotVal == null) {
+
+        return _comments;
+      }
 
       var newList = List<Comment>();
 
-      (snapshot.val() as Map<String, dynamic>).forEach((key, data) {
+      snapshotVal.forEach((key, data) {
         
         var obj = _comments.firstWhere(
           (x) => x.key == key,
