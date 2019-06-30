@@ -1,7 +1,5 @@
 import 'package:flutter_web/material.dart';
 import 'package:firebase/firebase.dart' as firebase;
-import 'package:kakaton/inspector_intervention_form.dart';
-import 'package:kakaton/interventions_list.dart';
 
 class MapPage extends StatefulWidget {
   MapPage({Key key}) : super(key: key);
@@ -54,11 +52,7 @@ class _MapPageState extends State<MapPage> {
                 )),
             InkWell(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => InspectorInterventionForm(),
-                      ));
+                  Navigator.pushNamedAndRemoveUntil(context, '/inspectorNew', (Route<dynamic> route) => false);
                 },
                 child: Padding(
                   padding: EdgeInsets.all(10.0),
@@ -75,11 +69,8 @@ class _MapPageState extends State<MapPage> {
                 )),
             InkWell(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => InterventionsList(),
-                      ));
+                  Navigator.pushNamedAndRemoveUntil(context, '/list', (Route<dynamic> route) => false);
+
                 },
                 child: Padding(
                   padding: EdgeInsets.all(10.0),
@@ -97,8 +88,8 @@ class _MapPageState extends State<MapPage> {
             InkWell(
                 onTap: () {
                   firebase.auth().signOut();
-                  Navigator.popUntil(
-                      context, ModalRoute.withName(Navigator.defaultRouteName));
+                  Navigator.pushNamedAndRemoveUntil(context, '/login', (Route<dynamic> route) => false);
+
                 },
                 child: Padding(
                   padding: EdgeInsets.all(10.0),

@@ -1,6 +1,5 @@
 import 'package:flutter_web/material.dart';
 import 'package:firebase/firebase.dart' as firebase;
-import 'package:kakaton/map_page.dart';
 
 class InspectorLoginForm extends StatefulWidget {
   InspectorLoginForm({Key key}) : super(key: key);
@@ -85,16 +84,13 @@ class _InspectorLoginFormState extends State<InspectorLoginForm> {
                             if (_formKey.currentState.validate()) {
                               //TODO zmienic na normalna funkcje
 
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => MapPage(),
-                                  ));
+                              Navigator.pushNamedAndRemoveUntil(context, '/map', (Route<dynamic> route) => false);
                             }
                           },
                           child: Text('Zaloguj'),
                         ),
                       ),
+
                     ],
                   ),
                 ),
@@ -111,11 +107,7 @@ class _InspectorLoginFormState extends State<InspectorLoginForm> {
   void authListener() {
     firebase.auth().onAuthStateChanged.listen((e) {
       if (e != null) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MapPage(),
-            ));
+        Navigator.pushNamedAndRemoveUntil(context, '/map', (Route<dynamic> route) => false);
       }
     });
   }

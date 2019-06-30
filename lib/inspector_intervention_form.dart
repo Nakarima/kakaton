@@ -68,11 +68,8 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
             ),
             InkWell(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MapPage(),
-                      ));
+                  Navigator.pushNamedAndRemoveUntil(context, '/map', (Route<dynamic> route) => false);
+
                 },
                 child: Padding(
                   padding: EdgeInsets.all(10.0),
@@ -114,11 +111,8 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
                 )),
             InkWell(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => InterventionsList(),
-                      ));
+                  Navigator.pushNamedAndRemoveUntil(context, '/list', (Route<dynamic> route) => false);
+
                 },
                 child: Padding(
                   padding: EdgeInsets.all(10.0),
@@ -136,8 +130,8 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
             InkWell(
                 onTap: () {
                   firebase.auth().signOut();
-                  Navigator.popUntil(
-                      context, ModalRoute.withName(Navigator.defaultRouteName));
+                  Navigator.pushNamedAndRemoveUntil(context, '/login', (Route<dynamic> route) => false);
+
                 },
                 child: Padding(
                   padding: EdgeInsets.all(10.0),

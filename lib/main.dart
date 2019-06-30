@@ -1,5 +1,10 @@
 import 'package:flutter_web/material.dart';
 import 'package:kakaton/login_form.dart';
+import 'package:kakaton/interventions_list.dart';
+import 'package:kakaton/inspector_intervention_form.dart';
+import 'package:kakaton/new_intervention_form.dart';
+import 'package:kakaton/inspector_login_form.dart';
+import 'package:kakaton/map_page.dart';
 import 'package:firebase/firebase.dart' as firebase;
 
 void main() {
@@ -25,6 +30,14 @@ class MyApp extends StatelessWidget {
         fontFamily: 'RobotoMono',
       ),
       home: LoginForm(),//asdd
+      routes: <String, WidgetBuilder> {
+        '/login': (BuildContext context) => new LoginForm(),
+        '/loginInspector': (BuildContext context) => new InspectorLoginForm(),
+        '/normalUser': (BuildContext context) => new NewInterventionForm(),
+        '/map': (BuildContext context) => new MapPage(),
+        '/inspectorNew': (BuildContext context) => new InspectorInterventionForm(),
+        '/list': (BuildContext context) => new InterventionsList(),
+      },
     );
   }
 }

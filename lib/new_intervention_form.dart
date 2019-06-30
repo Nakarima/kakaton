@@ -36,7 +36,7 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
             InkWell(
                 onTap: () {
                   firebase.auth().signOut();
-                  Navigator.popUntil(context, ModalRoute.withName(Navigator.defaultRouteName));
+                  Navigator.pushReplacementNamed(context, '/login');
                 },
               child: Padding(
                 padding: EdgeInsets.all(10.0),

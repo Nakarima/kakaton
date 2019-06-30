@@ -3,6 +3,9 @@ import 'package:kakaton/models/intervention.dart';
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:kakaton/map_page.dart';
 import 'package:kakaton/inspector_intervention_form.dart';
+import 'package:kakaton/models/store.dart';
+import 'package:intl/intl.dart';
+
 
 class InterventionsList extends StatefulWidget {
   InterventionsList({Key key}) : super(key: key);
@@ -33,11 +36,8 @@ class _InterventionsListState extends State<InterventionsList> {
             ),
             InkWell(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MapPage(),
-                      ));
+                  Navigator.pushNamedAndRemoveUntil(context, '/map', (Route<dynamic> route) => false);
+
                 },
                 child: Padding(
                   padding: EdgeInsets.all(10.0),
@@ -56,11 +56,8 @@ class _InterventionsListState extends State<InterventionsList> {
                 )),
             InkWell(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => InspectorInterventionForm(),
-                      ));
+                  Navigator.pushNamedAndRemoveUntil(context, '/inspectorNew', (Route<dynamic> route) => false);
+
                 },
                 child: Padding(
                   padding: EdgeInsets.all(10.0),
@@ -105,8 +102,8 @@ class _InterventionsListState extends State<InterventionsList> {
             InkWell(
                 onTap: () {
                   firebase.auth().signOut();
-                  Navigator.popUntil(
-                      context, ModalRoute.withName(Navigator.defaultRouteName));
+                  Navigator.pushNamedAndRemoveUntil(context, '/login', (Route<dynamic> route) => false);
+
                 },
                 child: Padding(
                   padding: EdgeInsets.all(10.0),
@@ -125,7 +122,7 @@ class _InterventionsListState extends State<InterventionsList> {
         ),
       ),
       body: StreamBuilder<List<Intervention>>(
-        stream: posts,
+        stream: store.interventions.get(),
         builder:
             (BuildContext context, AsyncSnapshot<List<Intervention>> snapshot) {
           if (snapshot.hasError) {
