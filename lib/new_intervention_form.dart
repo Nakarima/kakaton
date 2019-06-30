@@ -1,5 +1,5 @@
 import 'package:flutter_web/material.dart';
-import 'package:kakaton/Models/Intervention.dart';
+import 'package:kakaton/models/intervention.dart';
 import 'package:firebase/firebase.dart' as firebase;
 
 class NewInterventionForm extends StatefulWidget {
@@ -26,7 +26,12 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             DrawerHeader(
-              child: Text("Menu"),
+              child: Text(
+                "Menu",
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
             ),
             InkWell(
                 onTap: () {

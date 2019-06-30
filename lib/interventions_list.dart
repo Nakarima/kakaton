@@ -1,20 +1,29 @@
 import 'package:flutter_web/material.dart';
+import 'package:kakaton/models/intervention.dart';
 import 'package:firebase/firebase.dart' as firebase;
+import 'package:kakaton/map_page.dart';
 import 'package:kakaton/inspector_intervention_form.dart';
-import 'package:kakaton/interventions_list.dart';
+import 'package:intl/intl.dart';
 
-class MapPage extends StatefulWidget {
-  MapPage({Key key}) : super(key: key);
 
-  _MapPageState createState() => _MapPageState();
+class InterventionsList extends StatefulWidget {
+  InterventionsList({Key key}) : super(key: key);
+
+  @override
+  _InterventionsListState createState() => _InterventionsListState();
 }
 
-class _MapPageState extends State<MapPage> {
+class _InterventionsListState extends State<InterventionsList> {
+  final _formKey = GlobalKey<FormState>();
+
+  Intervention _intervention = new Intervention();
+
+
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       appBar: AppBar(
-        title: Text("Mapa zgłoszeń"),
+        title: Text('Dodaj nowe zgłoszenie'),
         centerTitle: true,
       ),
       drawer: Drawer(
@@ -30,7 +39,13 @@ class _MapPageState extends State<MapPage> {
               ),
             ),
             InkWell(
-                onTap: null,
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MapPage(),
+                      ));
+                },
                 child: Padding(
                   padding: EdgeInsets.all(10.0),
                   child: Row(
@@ -38,17 +53,11 @@ class _MapPageState extends State<MapPage> {
                     children: <Widget>[
                       Text(
                         "Mapa",
-                        style: TextStyle(
-                          color: Colors.amber,
-                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.all(3.0),
                       ),
-                      Icon(
-                        Icons.map,
-                        color: Colors.amber,
-                      ),
+                      Icon(Icons.map),
                     ],
                   ),
                 )),
@@ -65,32 +74,32 @@ class _MapPageState extends State<MapPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text("Dodaj zgłoszenie"),
+                      Text(
+                        "Dodaj zgłoszenie",
+                      ),
                       Padding(
                         padding: EdgeInsets.all(3.0),
                       ),
-                      Icon(Icons.add),
+                      Icon(
+                        Icons.add,
+                      ),
                     ],
                   ),
                 )),
             InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => InterventionsList(),
-                      ));
-                },
+                onTap: null,
                 child: Padding(
                   padding: EdgeInsets.all(10.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text("Lista zgłoszeń"),
+                      Text("Lista zgłoszeń", style: TextStyle(
+                        color: Colors.amber,
+                      ),),
                       Padding(
                         padding: EdgeInsets.all(3.0),
                       ),
-                      Icon(Icons.library_books),
+                      Icon(Icons.library_books, color: Colors.amber,),
                     ],
                   ),
                 )),
@@ -116,19 +125,13 @@ class _MapPageState extends State<MapPage> {
           ],
         ),
       ),
-      body: Column(
+      body: ListView(
         children: <Widget>[
-          Container(
-            height: MediaQuery.of(context).size.height - 56,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-              image: AssetImage('map.png'),
-              fit: BoxFit.fitHeight,
-            )),
-          ),
+
         ],
       ),
     );
   }
+
+
 }

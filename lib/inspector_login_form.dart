@@ -33,10 +33,12 @@ class _InspectorLoginFormState extends State<InspectorLoginForm> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               SizedBox(
+                height: MediaQuery.of(context).size.height - 56,
                 width: 600.0,
                 child: Form(
                   key: _formKey,
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Padding(
                         padding: EdgeInsets.all(10),
