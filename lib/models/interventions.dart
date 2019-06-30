@@ -11,6 +11,8 @@ class Interventions {
     return ref.onValue.map((queryEvent) {
       var snapshot = queryEvent.snapshot;
 
+      var newList = List<Intervention>();
+
       (snapshot.val() as Map<String, dynamic>).forEach((key, data) {
         
         var obj = _list.firstWhere(
@@ -20,9 +22,9 @@ class Interventions {
         if (obj == null) {
 
           obj = Intervention(key: key);
-
-          _list.add(obj);
         }
+
+        newList.add(obj);
 
         obj
           ..dateTime = DateTime.now()
@@ -34,16 +36,25 @@ class Interventions {
           ..adress = data["location"];
       });
 
+      _list.clear();
+      _list.addAll(newList);
+
       return _list;
     });
   }
 
-  Future<String> add() async {
+  Future<Intervention> add() async {
     try {
       final result = 
         await firebase.functions().httpsCallable('createEmptyReport').call({});
 
-      return result.data["key"];
+      var obj = Intervention(
+        key: result.data["key"]);
+
+      _list.add(obj);
+
+      return obj;
+
     } catch (e) {
       print(e);
     
@@ -52,7 +63,7 @@ class Interventions {
   }
 
   Future submit({
-    String key, 
+    Intervention intervention, 
     String description, 
     String location, 
     String phone}) async {
@@ -61,14 +72,33 @@ class Interventions {
 
       final result =
         await firebase.functions().httpsCallable('submitReport').call({
-            'key': key,
+            'key': intervention.key,
             'desc': description,
             'location': location,
             'phone': phone
           });
+        
     } catch (e) {
 
       print(e);
+    }
+  }
+
+  Future delete({Intervention intervention}) async {
+
+    try {
+
+      _list.remove(intervention);
+
+      final result = 
+        await firebase.functions().httpsCallable('deleteReport').call({
+            'key': intervention.key
+          });
+
+
+    } catch (e) {
+
+      print (e);
     }
   }
 }
