@@ -9,7 +9,7 @@ Logowanie inspektora:
 - loguj -> Dashboard
 
 Dashboard:
-- mapa z pinezkami zgłoszeń
+- mapa z pinezkami zgłoszeń //jest XDDDDD
 - przycisk "Dodaj zgłoszenie" -> Raportowanie zgłoszenia (inspektor)
 - przycisk "lista zgłoszeń" -> Lista zgłoszeń
 - wzorowane na google maps

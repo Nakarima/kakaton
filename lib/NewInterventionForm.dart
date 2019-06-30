@@ -1,6 +1,6 @@
 import 'package:flutter_web/material.dart';
 import 'package:kakaton/Models/Intervention.dart';
-import 'package:firebase/firebase.dart';
+import 'package:firebase/firebase.dart' as firebase;
 
 class NewInterventionForm extends StatefulWidget {
   NewInterventionForm({Key key}) : super(key: key);
@@ -18,7 +18,37 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Nowe zgłoszenie'),
+        title: Text('Dodaj nowe zgłoszenie'),
+        centerTitle: true,
+      ),
+      drawer: Drawer(
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            DrawerHeader(
+              child: Text("Menu"),
+            ),
+            InkWell(
+                onTap: () {
+                  firebase.auth().signOut();
+                  Navigator.popUntil(context, ModalRoute.withName(Navigator.defaultRouteName));
+                },
+              child: Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text("Wyloguj się"),
+                    Padding(
+                      padding: EdgeInsets.all(3.0),
+                    ),
+                    Icon(Icons.exit_to_app),
+                  ],
+                ),
+              )
+            )
+          ],
+        ),
       ),
       body: ListView(
         children: <Widget>[
@@ -31,15 +61,6 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
                   key: _formKey,
                   child: Column(
                     children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          "Dodaj zgłoszenie",
-                          style: TextStyle(
-                            fontSize: 20.0,
-                          ),
-                        ),
-                      ),
                       Padding(
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
@@ -64,29 +85,13 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Wprowadź numer telefonu';
+                            } else if (value.length != 9 || double.tryParse(value) == null) {
+                              return 'Niepoprawny numer telefony';
                             }
                             return null;
                           },
                           decoration: InputDecoration(
                             labelText: 'Numer Telefonu',
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(10),
-                        child: TextFormField(
-                          onSaved: (value) { _intervention.email = value; },
-                          validator: (value) {
-                            Pattern pattern =
-                                r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                            RegExp regex = new RegExp(pattern);
-                            if (!regex.hasMatch(value)) {
-                              return "Wprowadź email";
-                            }
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                            labelText: 'Email',
                           ),
                         ),
                       ),
@@ -111,6 +116,9 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
                         padding: const EdgeInsets.symmetric(vertical: 10.0),
                         child: RaisedButton(
                           color: Colors.amber[300],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                           onPressed: () {
 
                             if (_formKey.currentState.validate()) {

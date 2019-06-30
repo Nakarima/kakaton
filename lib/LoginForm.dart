@@ -1,6 +1,7 @@
 import 'package:flutter_web/material.dart';
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:kakaton/NewInterventionForm.dart';
+import 'package:kakaton/InspectorLoginForm.dart';
 
 
 class LoginForm extends StatefulWidget {
@@ -25,23 +26,76 @@ class _LoginFormState extends State<LoginForm> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("logowanie"),
+        title: Text("Logowanie"),
+        centerTitle: true,
       ),
       body: ListView(
         children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              RaisedButton(
-                color: Colors.amber[300],
-                onPressed: () {
+          Container(
+            height: MediaQuery.of(context).size.height - 56,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  height: 200.0,
+                  width: 200.0,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('ekosrasz.png'),
+                      fit: BoxFit.scaleDown,
+                    )
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(20.0),
+                ),
+                RaisedButton(
+                  color: Colors.amber[300],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  onPressed: () {
 
-                  startGoogleLogin();
-                },
-                child: Text('Zaloguj z google'),
-              )
-            ],
+                    startGoogleLogin();
+                  },
+                  child: Text('Zaloguj za pomocą Google'),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(10.0),
+                ),
+                RaisedButton(
+                  color: Colors.amber[300],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  onPressed: () {
+
+                    startGoogleLogin();
+                  },
+                  child: Text('Zaloguj za pomocą Facebook'),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(10.0),
+                ),
+                RaisedButton(
+                  color: Colors.amber[300],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  onPressed: () {
+
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => InspectorLoginForm(),
+                        ));
+                  },
+                  child: Text('Zaloguj jako inspektor'),
+                )
+              ],
+            ),
           )
         ],
       ), // This trailing comma makes auto-formatting nicer for build methods.
