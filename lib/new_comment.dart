@@ -1,7 +1,5 @@
 import 'package:flutter_web/material.dart';
-import 'package:kakaton/models/comment.dart';
 import 'package:kakaton/models/intervention.dart';
-import 'package:firebase/firebase.dart' as firebase;
 
 class NewCommentForm extends StatefulWidget {
   NewCommentForm({Key key, this.intervention}) : super(key: key);
@@ -14,7 +12,7 @@ class NewCommentForm extends StatefulWidget {
 class _NewCommentFormState extends State<NewCommentForm> {
   final _formKey = GlobalKey<FormState>();
 
-  Comment _comment = new Comment();
+  String description;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +36,7 @@ class _NewCommentFormState extends State<NewCommentForm> {
                       Padding(
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
-                          onSaved: (value) { _comment.description = value; },
+                          onSaved: (value) { description = value; },
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Wprowadź opis';
@@ -82,7 +80,7 @@ class _NewCommentFormState extends State<NewCommentForm> {
 
   void _sendDataBack(BuildContext context) {
     _formKey.currentState.save();
-    _comment.dateTime = DateTime.now();
+    widget.intervention.addComment(description: description);
     // Todo add to intervention
     showDialog(
       context: context,

@@ -16,7 +16,9 @@ class InspectorInterventionForm extends StatefulWidget {
 class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
   final _formKey = GlobalKey<FormState>();
 
-  Intervention _intervention = new Intervention();
+  String description;
+  String phone;
+  String adress;
   DateTime selectedDate = DateTime.now();
 
   Future<Null> _selectDate(BuildContext context) async {
@@ -164,7 +166,7 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
                           onSaved: (value) {
-                            _intervention.description = value;
+                            description = value;
                           },
                           validator: (value) {
                             if (value.isEmpty) {
@@ -183,7 +185,7 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
                           onSaved: (value) {
-                            _intervention.phone = value;
+                            phone = value;
                           },
                           validator: (value) {
                             if (value.isEmpty) {
@@ -203,7 +205,7 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
                           onSaved: (value) {
-                            _intervention.adress = value;
+                            adress = value;
                           },
                           validator: (value) {
                             if (value.isEmpty) {
@@ -287,7 +289,7 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
 
   void _sendDataBack(BuildContext context) {
     _formKey.currentState.save();
-    Intervention result = _intervention;
+    //TODO
     showDialog(
       context: context,
       builder: (BuildContext context) {
