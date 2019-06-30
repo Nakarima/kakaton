@@ -1,4 +1,7 @@
+import 'package:kakaton/models/intervention.dart';
+
 class Comment {
+  String key;
   Intervention intervention;
   DateTime dateTime;
   String description;

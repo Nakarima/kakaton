@@ -1,4 +1,5 @@
 import 'package:kakaton/models/comment.dart';
+import 'package:firebase/firebase.dart' as firebase;
 
 class Intervention {
   String key;
@@ -32,7 +33,7 @@ class Intervention {
 
       (snapshot.val() as Map<String, dynamic>).forEach((key, data) {
         
-        var obj = _list.firstWhere(
+        var obj = _comments.firstWhere(
           (x) => x.key == key,
           orElse: () => null);
 
@@ -52,19 +53,19 @@ class Intervention {
           ..description = data["text"];
       });
 
-      _list.clear();
-      _list.addAll(newList);
+      _comments.clear();
+      _comments.addAll(newList);
 
-      return _list;
+      return _comments;
     });
   }
 
-  Future addComment({String description}) {
+  Future addComment({String description}) async {
     try {
 
       final result = 
         await firebase.functions().httpsCallable('deleteReport').call({
-            'key': intervention.key,
+            'key': this.key,
             'text': description
           });
 
