@@ -162,6 +162,8 @@ class _InterventionDetailsState extends State<InterventionDetails> {
                     );
                   }
                   return ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                     itemCount: snapshot.data.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Row(
@@ -186,6 +188,11 @@ class _InterventionDetailsState extends State<InterventionDetails> {
                                               "Data: ${DateFormat('yyyy-MM-dd kk:mm').format(snapshot.data[index].dateTime)}"),
                                         ),
                                         Padding(
+                                          padding: EdgeInsets.all(5.0),
+                                          child: Text(
+                                              "Email: ${snapshot.data[index].authorEmail}"),
+                                        ),
+                                        Padding(
                                           padding: EdgeInsets.only(
                                               top: 5.0, bottom: 10.0),
                                           child: Text(
@@ -206,6 +213,9 @@ class _InterventionDetailsState extends State<InterventionDetails> {
               }
             },
           ),
+          Padding(
+            padding: EdgeInsets.all(15.0),
+          )
         ],
       ),
     );
