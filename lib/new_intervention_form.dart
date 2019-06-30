@@ -1,5 +1,6 @@
 import 'package:flutter_web/material.dart';
 import 'package:kakaton/models/intervention.dart';
+import 'package:kakaton/models/store.dart';
 import 'package:firebase/firebase.dart' as firebase;
 
 class NewInterventionForm extends StatefulWidget {
@@ -38,20 +39,19 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
                   firebase.auth().signOut();
                   Navigator.pushReplacementNamed(context, '/login');
                 },
-              child: Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text("Wyloguj się"),
-                    Padding(
-                      padding: EdgeInsets.all(3.0),
-                    ),
-                    Icon(Icons.exit_to_app),
-                  ],
-                ),
-              )
-            )
+                child: Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text("Wyloguj się"),
+                      Padding(
+                        padding: EdgeInsets.all(3.0),
+                      ),
+                      Icon(Icons.exit_to_app),
+                    ],
+                  ),
+                ))
           ],
         ),
       ),
@@ -69,7 +69,9 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
                       Padding(
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
-                          onSaved: (value) { _intervention.description = value; },
+                          onSaved: (value) {
+                            _intervention.description = value;
+                          },
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Wprowadź opis zdarzenia';
@@ -86,11 +88,14 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
                       Padding(
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
-                          onSaved: (value) { _intervention.phone = value; },
+                          onSaved: (value) {
+                            _intervention.phone = value;
+                          },
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Wprowadź numer telefonu';
-                            } else if (value.length != 9 || double.tryParse(value) == null) {
+                            } else if (value.length != 9 ||
+                                double.tryParse(value) == null) {
                               return 'Niepoprawny numer telefony';
                             }
                             return null;
@@ -103,7 +108,9 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
                       Padding(
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
-                          onSaved: (value) { _intervention.adress = value; },
+                          onSaved: (value) {
+                            _intervention.adress = value;
+                          },
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Wprowadź adres';
@@ -125,7 +132,6 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           onPressed: () {
-
                             if (_formKey.currentState.validate()) {
                               _sendDataBack(context);
                             }
@@ -144,16 +150,24 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
     );
   }
 
-  void _sendDataBack(BuildContext context) {
+  void _sendDataBack(BuildContext context) async {
     _formKey.currentState.save();
     _intervention.dateTime = DateTime.now();
-    Intervention result = _intervention;
-    showDialog(
+    String key;
+    key = await store.interventions.add();
+    if (key != null) {
+      await store.interventions.submit(
+          key: key,
+          description: _intervention.description,
+          phone: _intervention.phone,
+          location: _intervention.adress);
+    }
+    await showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Zgłoszenie wysłane"),
+          title: new Text(key != null ? "Zgłoszenie wysłane" : "Nie udało się"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
