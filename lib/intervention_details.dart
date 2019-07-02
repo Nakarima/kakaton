@@ -4,7 +4,7 @@ import 'package:kakaton/models/comment.dart';
 import 'package:kakaton/models/store.dart';
 import 'package:intl/intl.dart';
 import 'package:kakaton/intervention_edit.dart';
-import 'package:kakaton/new_comment.dart';
+import 'package:kakaton/widgets/comments_list.dart';
 
 class InterventionDetails extends StatefulWidget {
   InterventionDetails({Key key, this.intervention}) : super(key: key);
@@ -22,7 +22,7 @@ class _InterventionDetailsState extends State<InterventionDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Szczegóły"),
+        title: Text("Details"),
         centerTitle: true,
       ),
       body: ListView(
@@ -33,7 +33,7 @@ class _InterventionDetailsState extends State<InterventionDetails> {
               Padding(
                 padding: EdgeInsets.only(bottom: 5.0, top: 40.0),
                 child: Text(
-                  "Użytkownik: ${widget.intervention.contact}",
+                  "User: ${widget.intervention.contact}",
                   style: TextStyle(
                     fontSize: 20.0,
                   ),
@@ -42,7 +42,7 @@ class _InterventionDetailsState extends State<InterventionDetails> {
               Padding(
                 padding: EdgeInsets.all(5.0),
                 child: Text(
-                  "Telefon: ${widget.intervention.phone}",
+                  "Phone number: ${widget.intervention.phone}",
                   style: TextStyle(
                     fontSize: 20.0,
                   ),
@@ -60,7 +60,7 @@ class _InterventionDetailsState extends State<InterventionDetails> {
               Padding(
                 padding: EdgeInsets.all(5.0),
                 child: Text(
-                  "Miejsce: ${widget.intervention.adress}",
+                  "Address: ${widget.intervention.address}",
                   style: TextStyle(
                     fontSize: 20.0,
                   ),
@@ -69,7 +69,7 @@ class _InterventionDetailsState extends State<InterventionDetails> {
               Padding(
                 padding: EdgeInsets.all(5.0),
                 child: Text(
-                  "Data: ${DateFormat('yyyy-MM-dd kk:mm').format(widget.intervention.dateTime)}",
+                  "Date: ${DateFormat('yyyy-MM-dd kk:mm').format(widget.intervention.dateTime)}",
                   style: TextStyle(
                     fontSize: 20.0,
                   ),
@@ -87,7 +87,7 @@ class _InterventionDetailsState extends State<InterventionDetails> {
               Padding(
                 padding: EdgeInsets.only(top: 5.0, bottom: 10.0),
                 child: Text(
-                  "Opis: ${widget.intervention.description}",
+                  "Description: ${widget.intervention.description}",
                   style: TextStyle(
                     fontSize: 20.0,
                   ),
@@ -110,7 +110,7 @@ class _InterventionDetailsState extends State<InterventionDetails> {
                               builder: (context) => InterventionEdit(
                                   intervention: widget.intervention)));
                     },
-                    child: Text('Edytuj'),
+                    child: Text('Edit'),
                   ),
                   RaisedButton(
                     color: Colors.amber[300],
@@ -120,7 +120,7 @@ class _InterventionDetailsState extends State<InterventionDetails> {
                     onPressed: () {
                       _delete();
                     },
-                    child: Text('Usuń'),
+                    child: Text('Delete'),
                   ),
                 ],
               )
@@ -128,7 +128,7 @@ class _InterventionDetailsState extends State<InterventionDetails> {
           ),
           Padding(
             padding: EdgeInsets.all(10),
-            child: Text("Komentarze:"),
+            child: Text("Comments:"),
           ),
           SizedBox(
             width: 600.0,
@@ -144,14 +144,14 @@ class _InterventionDetailsState extends State<InterventionDetails> {
                       },
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Wprowadź opis';
+                          return 'Enter description';
                         }
                         return null;
                       },
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
                       decoration: InputDecoration(
-                        labelText: 'Opis',
+                        labelText: 'Description',
                       ),
                     ),
                   ),
@@ -167,7 +167,7 @@ class _InterventionDetailsState extends State<InterventionDetails> {
                           _sendDataBack(context);
                         }
                       },
-                      child: Text('Wyślij komentarz'),
+                      child: Text('Send comment'),
                     ),
                   ),
                 ],
@@ -191,57 +191,10 @@ class _InterventionDetailsState extends State<InterventionDetails> {
 
                   if (snapshot.data.isEmpty) {
                     return Center(
-                      child: Text("Brak komentarzy"),
+                      child: Text("No comments"),
                     );
                   }
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          SizedBox(
-                            height: 250,
-                            width: 350,
-                            child: Padding(
-                              padding: EdgeInsets.all(5.0),
-                              child: Card(
-                                child: InkWell(
-                                  child: Container(
-                                    width: 100,
-                                    height: 50,
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: EdgeInsets.all(5.0),
-                                          child: Text(
-                                              "Data: ${DateFormat('yyyy-MM-dd kk:mm').format(snapshot.data[index].dateTime)}"),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.all(5.0),
-                                          child: Text(
-                                              "Email: ${snapshot.data[index].authorEmail}"),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              top: 5.0, bottom: 10.0),
-                                          child: Text(
-                                              "${snapshot.data[index].description}"),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      );
-                    },
-                  );
+                  return CommentsList(snapshot.data);
               }
             },
           ),
@@ -256,17 +209,16 @@ class _InterventionDetailsState extends State<InterventionDetails> {
   void _sendDataBack(BuildContext context) {
     _formKey.currentState.save();
     widget.intervention.addComment(description: description);
-    // Todo add to intervention
     showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Komentarz dodany"),
+          title: new Text("Comment sent"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text("Zamknij"),
+              child: new Text("close"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -275,7 +227,6 @@ class _InterventionDetailsState extends State<InterventionDetails> {
         );
       },
     );
-    //Navigator.pop(context, result);
   }
 
   void _delete() async {
@@ -284,7 +235,7 @@ class _InterventionDetailsState extends State<InterventionDetails> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Usunąć interwencje?"),
+          title: new Text("Delete intervention?"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             Row(
@@ -292,7 +243,7 @@ class _InterventionDetailsState extends State<InterventionDetails> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 new FlatButton(
-                  child: new Text("Tak"),
+                  child: new Text("Yes"),
                   onPressed: () {
                     store.interventions
                         .delete(intervention: widget.intervention);
@@ -301,7 +252,7 @@ class _InterventionDetailsState extends State<InterventionDetails> {
                   },
                 ),
                 new FlatButton(
-                  child: new Text("Nie"),
+                  child: new Text("No"),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },

@@ -1,9 +1,9 @@
 import 'package:flutter_web/material.dart';
 import 'package:kakaton/models/intervention.dart';
-import 'package:firebase/firebase.dart' as firebase;
 import 'package:kakaton/models/store.dart';
 import 'package:intl/intl.dart';
 import 'package:kakaton/intervention_details.dart';
+import 'package:kakaton/widgets/inspector_drawer.dart';
 
 class InterventionsList extends StatefulWidget {
   InterventionsList({Key key}) : super(key: key);
@@ -17,108 +17,10 @@ class _InterventionsListState extends State<InterventionsList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Lista zgłoszeń'),
+        title: Text('Interventions list'),
         centerTitle: true,
       ),
-      drawer: Drawer(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            DrawerHeader(
-              child: Text(
-                "Menu",
-                style: TextStyle(
-                  fontSize: 20,
-                ),
-              ),
-            ),
-            InkWell(
-                onTap: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, '/map', (Route<dynamic> route) => false);
-                },
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "Mapa",
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(3.0),
-                      ),
-                      Icon(Icons.map),
-                    ],
-                  ),
-                )),
-            InkWell(
-                onTap: () {
-                  Navigator.pushNamedAndRemoveUntil(context, '/inspectorNew',
-                      (Route<dynamic> route) => false);
-                },
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "Dodaj zgłoszenie",
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(3.0),
-                      ),
-                      Icon(
-                        Icons.add,
-                      ),
-                    ],
-                  ),
-                )),
-            InkWell(
-                onTap: null,
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "Lista zgłoszeń",
-                        style: TextStyle(
-                          color: Colors.amber,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(3.0),
-                      ),
-                      Icon(
-                        Icons.library_books,
-                        color: Colors.amber,
-                      ),
-                    ],
-                  ),
-                )),
-            InkWell(
-                onTap: () {
-                  firebase.auth().signOut();
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, '/login', (Route<dynamic> route) => false);
-                },
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text("Wyloguj się"),
-                      Padding(
-                        padding: EdgeInsets.all(3.0),
-                      ),
-                      Icon(Icons.exit_to_app),
-                    ],
-                  ),
-                ))
-          ],
-        ),
-      ),
+      drawer: InspectorDrawer(),
       body: StreamBuilder<List<Intervention>>(
         stream: store.interventions.get(),
         builder:
@@ -136,7 +38,7 @@ class _InterventionsListState extends State<InterventionsList> {
 
               if (snapshot.data.isEmpty) {
                 return Center(
-                  child: Text("Brak interwencji"),
+                  child: Text("No interventions"),
                 );
               }
               return ListView.builder(
@@ -171,17 +73,17 @@ class _InterventionsListState extends State<InterventionsList> {
                                       padding: EdgeInsets.only(
                                           bottom: 5.0, top: 40.0),
                                       child: Text(
-                                          "Użytkownik: ${snapshot.data[index].contact}"),
+                                          "User: ${snapshot.data[index].contact}"),
                                     ),
                                     Padding(
                                       padding: EdgeInsets.all(5.0),
                                       child: Text(
-                                          "Miejsce: ${snapshot.data[index].adress}"),
+                                          "Address: ${snapshot.data[index].address}"),
                                     ),
                                     Padding(
                                       padding: EdgeInsets.all(5.0),
                                       child: Text(
-                                          "Data: ${DateFormat('yyyy-MM-dd kk:mm').format(snapshot.data[index].dateTime)}"),
+                                          "Date: ${DateFormat('yyyy-MM-dd kk:mm').format(snapshot.data[index].dateTime)}"),
                                     ),
                                     Padding(
                                       padding: EdgeInsets.only(
@@ -203,7 +105,7 @@ class _InterventionsListState extends State<InterventionsList> {
                                                         intervention:
                                                         snapshot.data[index])));
                                       },
-                                      child: Text('Szczegóły'),
+                                      child: Text('Details'),
                                     )
                                   ],
                                 ),

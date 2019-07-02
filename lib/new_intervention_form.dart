@@ -15,13 +15,13 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
 
   String description;
   String phone;
-  String adress;
+  String address;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dodaj nowe zgłoszenie'),
+        title: Text('Add new intervention'),
         centerTitle: true,
       ),
       drawer: Drawer(
@@ -46,7 +46,7 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text("Wyloguj się"),
+                      Text("Log out"),
                       Padding(
                         padding: EdgeInsets.all(3.0),
                       ),
@@ -76,14 +76,14 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
                           },
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Wprowadź opis zdarzenia';
+                              return 'Enter description';
                             }
                             return null;
                           },
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
                           decoration: InputDecoration(
-                            labelText: 'Opis',
+                            labelText: 'Description',
                           ),
                         ),
                       ),
@@ -95,15 +95,15 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
                           },
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Wprowadź numer telefonu';
+                              return 'Enter phone number';
                             } else if (value.length != 9 ||
                                 double.tryParse(value) == null) {
-                              return 'Niepoprawny numer telefony';
+                              return 'Invalid phone number';
                             }
                             return null;
                           },
                           decoration: InputDecoration(
-                            labelText: 'Numer Telefonu',
+                            labelText: 'Phone number',
                           ),
                         ),
                       ),
@@ -111,18 +111,18 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
                           onSaved: (value) {
-                            adress = value;
+                            address = value;
                           },
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Wprowadź adres';
+                              return 'Enter address';
                             }
                             return null;
                           },
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
                           decoration: InputDecoration(
-                            labelText: 'Adres',
+                            labelText: 'Address',
                           ),
                         ),
                       ),
@@ -138,7 +138,7 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
                               _sendDataBack(context);
                             }
                           },
-                          child: Text('Wyślij'),
+                          child: Text('Send'),
                         ),
                       ),
                     ],
@@ -161,18 +161,16 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
           intervention: key,
           description: description,
           phone: phone,
-          location: adress);
+          location: address);
     }
     await showDialog(
       context: context,
       builder: (BuildContext context) {
-        // return object of type Dialog
         return AlertDialog(
-          title: new Text(key != null ? "Zgłoszenie wysłane" : "Nie udało się"),
+          title: new Text(key != null ? "Intervention sent" : "Failed"),
           actions: <Widget>[
-            // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text("Zamknij"),
+              child: new Text("close"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -181,6 +179,5 @@ class _NewInterventionFormState extends State<NewInterventionForm> {
         );
       },
     );
-    //Navigator.pop(context, result);
   }
 }

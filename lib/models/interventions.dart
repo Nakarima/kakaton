@@ -33,7 +33,7 @@ class Interventions {
           ..phone = data["phone"]
           ..email = data["email"]
           ..status = data["status"]
-          ..adress = data["location"];
+          ..address = data["location"];
       });
 
       _list.clear();

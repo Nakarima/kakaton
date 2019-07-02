@@ -24,7 +24,7 @@ class _LoginFormState extends State<LoginForm> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Logowanie"),
+        title: Text("Login page"),
         centerTitle: true,
       ),
       body: ListView(
@@ -36,19 +36,7 @@ class _LoginFormState extends State<LoginForm> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Container(
-                  height: 200.0,
-                  width: 200.0,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('ekosrasz.png'),
-                      fit: BoxFit.scaleDown,
-                    )
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(20.0),
-                ),
+
                 RaisedButton(
                   color: Colors.amber[300],
                   shape: RoundedRectangleBorder(
@@ -58,7 +46,7 @@ class _LoginFormState extends State<LoginForm> {
 
                     startGoogleLogin();
                   },
-                  child: Text('Zaloguj za pomocą Google'),
+                  child: Text('Log in with Google'),
                 ),
                 Padding(
                   padding: EdgeInsets.all(10.0),
@@ -72,7 +60,7 @@ class _LoginFormState extends State<LoginForm> {
 
                     startGoogleLogin();
                   },
-                  child: Text('Zaloguj za pomocą Facebook'),
+                  child: Text('Log in with Facebook'),
                 ),
                 Padding(
                   padding: EdgeInsets.all(10.0),
@@ -89,7 +77,7 @@ class _LoginFormState extends State<LoginForm> {
                        '/loginInspector',
                     );
                   },
-                  child: Text('Zaloguj jako inspektor'),
+                  child: Text('Log in as inspector'),
                 )
               ],
             ),

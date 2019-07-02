@@ -17,7 +17,7 @@ class _interventionEditState extends State<InterventionEdit> {
   String description;
   String contact;
   String name;
-  String adress;
+  String address;
   String status;
   String phone;
   String email;
@@ -40,10 +40,11 @@ class _interventionEditState extends State<InterventionEdit> {
         lastDate: DateTime(2101));
     final DateTime picked = new DateTime(datePicked.year, datePicked.month,
         datePicked.day, selectedDate.hour, selectedDate.minute);
-    if (picked != null && picked != selectedDate)
+    if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
       });
+    }
   }
 
   Future<Null> _selectTime(BuildContext context) async {
@@ -54,10 +55,11 @@ class _interventionEditState extends State<InterventionEdit> {
     );
     final DateTime picked = new DateTime(selectedDate.year, selectedDate.month,
         selectedDate.day, timePicked.hour, timePicked.minute);
-    if (picked != null && picked != selectedDate)
+    if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
       });
+    }
   }
 
 
@@ -68,12 +70,9 @@ class _interventionEditState extends State<InterventionEdit> {
     _dropDownMenuItems = getDropDownMenuItems();
     super.initState();
   }
-  // here we are creating the list needed for the DropDownButton
   List<DropdownMenuItem<String>> getDropDownMenuItems() {
     List<DropdownMenuItem<String>> items = new List();
     for (String status in _statuses) {
-      // here we are creating the drop down menu items, you can customize the item right here
-      // but I'll just use a simple text for this
       items.add(new DropdownMenuItem(
           value: status,
           child: new Text(status)
@@ -86,7 +85,7 @@ class _interventionEditState extends State<InterventionEdit> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edytuj zgłoszenie'),
+        title: Text('Edit intervention'),
         centerTitle: true,
       ),
       body: ListView(
@@ -109,14 +108,14 @@ class _interventionEditState extends State<InterventionEdit> {
                           },
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Wprowadź opis zdarzenia';
+                              return 'Enter description';
                             }
                             return null;
                           },
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
                           decoration: InputDecoration(
-                            labelText: 'Opis',
+                            labelText: 'Description',
                           ),
                         ),
                       ),
@@ -130,14 +129,14 @@ class _interventionEditState extends State<InterventionEdit> {
                           },
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Wprowadź imie i nazwisko';
+                              return 'Enter name';
                             }
                             return null;
                           },
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
                           decoration: InputDecoration(
-                            labelText: 'Imie i nazwisko',
+                            labelText: 'Name',
                           ),
                         ),
                       ),
@@ -151,7 +150,7 @@ class _interventionEditState extends State<InterventionEdit> {
                           },
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Wprowadź email';
+                              return 'Enter email';
                             }
                             return null;
                           },
@@ -172,36 +171,36 @@ class _interventionEditState extends State<InterventionEdit> {
                           },
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Wprowadź numer telefonu';
+                              return 'Enter phone number';
                             } else if (value.length != 9 ||
                                 double.tryParse(value) == null) {
-                              return 'Niepoprawny numer telefony';
+                              return 'Invalid phone number';
                             }
                             return null;
                           },
                           decoration: InputDecoration(
-                            labelText: 'Numer Telefonu',
+                            labelText: 'Phone number',
                           ),
                         ),
                       ),
                       Padding(
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
-                          initialValue: widget.intervention.adress,
+                          initialValue: widget.intervention.address,
 
                           onSaved: (value) {
-                            adress = value;
+                            address = value;
                           },
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Wprowadź adres';
+                              return 'Enter address';
                             }
                             return null;
                           },
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
                           decoration: InputDecoration(
-                            labelText: 'Adres',
+                            labelText: 'Address',
                           ),
                         ),
                       ),
@@ -211,7 +210,7 @@ class _interventionEditState extends State<InterventionEdit> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             Text(
-                              "Data: ${DateFormat('yyyy-MM-dd kk:mm').format(selectedDate)}",
+                              "Date: ${DateFormat('yyyy-MM-dd kk:mm').format(selectedDate)}",
                               style: TextStyle(
                                 fontSize: 20.0,
                               ),
@@ -228,7 +227,7 @@ class _interventionEditState extends State<InterventionEdit> {
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   onPressed: () => _selectDate(context),
-                                  child: Text('Wybierz datę'),
+                                  child: Text('Select date'),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.all(5.0),
@@ -239,7 +238,7 @@ class _interventionEditState extends State<InterventionEdit> {
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   onPressed: () => _selectTime(context),
-                                  child: Text('Wybierz czas'),
+                                  child: Text('Select time'),
                                 ),
                               ],
                             )
@@ -275,7 +274,7 @@ class _interventionEditState extends State<InterventionEdit> {
                               _sendDataBack(context);
                             }
                           },
-                          child: Text('Wyślij'),
+                          child: Text('Send'),
                         ),
                       ),
                     ],
@@ -291,17 +290,17 @@ class _interventionEditState extends State<InterventionEdit> {
 
   void _sendDataBack(BuildContext context) {
     _formKey.currentState.save();
-    widget.intervention.edit(dateTime: selectedDate, contact: contact, description: description, phone: phone, email: email, location: adress, status: status);
+    widget.intervention.edit(dateTime: selectedDate, contact: contact, description: description, phone: phone, email: email, location: address, status: status);
     showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Zgłoszenie edytowane"),
+          title: new Text("Intervention edited"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text("Powrót"),
+              child: new Text("Back"),
               onPressed: () {
                 Navigator.pushNamedAndRemoveUntil(context, '/list', (Route<dynamic> route) => false);
               },

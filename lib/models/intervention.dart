@@ -9,7 +9,7 @@ class Intervention {
   String phone;
   String email;
   String status;
-  String adress;
+  String address;
 
   Intervention({
     this.key,
@@ -19,7 +19,7 @@ class Intervention {
     this.phone:null,
     this.email:null,
     this.status:null,
-    this.adress:null});
+    this.address:null});
 
   final List<Comment> _comments = List<Comment>();
 

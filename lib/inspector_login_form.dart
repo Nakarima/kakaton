@@ -25,7 +25,7 @@ class _InspectorLoginFormState extends State<InspectorLoginForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Logowanie jako inspektor"),
+        title: Text("Log in as inspector"),
         centerTitle: true,
       ),
       body: ListView(
@@ -49,12 +49,12 @@ class _InspectorLoginFormState extends State<InspectorLoginForm> {
                           },
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Wprowadź login';
+                              return 'Enter email';
                             }
                             return null;
                           },
                           decoration: InputDecoration(
-                            labelText: 'Login',
+                            labelText: 'Email',
                           ),
                         ),
                       ),
@@ -67,12 +67,12 @@ class _InspectorLoginFormState extends State<InspectorLoginForm> {
                           },
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Wprowadź haslo';
+                              return 'Enter password';
                             }
                             return null;
                           },
                           decoration: InputDecoration(
-                            labelText: 'Hasło',
+                            labelText: 'Password',
                           ),
                         ),
                       ),
@@ -86,13 +86,12 @@ class _InspectorLoginFormState extends State<InspectorLoginForm> {
                           ),
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
-                              //TODO zmienic na normalna funkcje
                               _formKey.currentState.save();
                               startInspectorLogin();
 
                             }
                           },
-                          child: Text('Zaloguj'),
+                          child: Text('Log in'),
                         ),
                       ),
 
@@ -107,10 +106,8 @@ class _InspectorLoginFormState extends State<InspectorLoginForm> {
     );
   }
 
- // TODO logowanie
 
   void startInspectorLogin() async {
-    var provider = firebase.EmailAuthProvider();
     try {
       await firebase.auth().signInWithEmailAndPassword(email, password);
     } catch(e) {

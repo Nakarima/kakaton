@@ -1,9 +1,6 @@
 import 'package:flutter_web/material.dart';
-import 'package:kakaton/models/intervention.dart';
-import 'package:firebase/firebase.dart' as firebase;
-import 'package:kakaton/map_page.dart';
+import 'package:kakaton/widgets/inspector_drawer.dart';
 import 'package:intl/intl.dart';
-import 'package:kakaton/interventions_list.dart';
 
 class InspectorInterventionForm extends StatefulWidget {
   InspectorInterventionForm({Key key}) : super(key: key);
@@ -18,7 +15,7 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
 
   String description;
   String phone;
-  String adress;
+  String address;
   DateTime selectedDate = DateTime.now();
 
   Future<Null> _selectDate(BuildContext context) async {
@@ -29,10 +26,11 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
         lastDate: DateTime(2101));
     final DateTime picked = new DateTime(datePicked.year, datePicked.month,
         datePicked.day, selectedDate.hour, selectedDate.minute);
-    if (picked != null && picked != selectedDate)
+    if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
       });
+    }
   }
 
   Future<Null> _selectTime(BuildContext context) async {
@@ -43,114 +41,21 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
     );
     final DateTime picked = new DateTime(selectedDate.year, selectedDate.month,
         selectedDate.day, timePicked.hour, timePicked.minute);
-    if (picked != null && picked != selectedDate)
+    if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
       });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Dodaj nowe zgłoszenie'),
+        title: Text('Add new intervention'),
         centerTitle: true,
       ),
-      drawer: Drawer(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            DrawerHeader(
-              child: Text(
-                "Menu",
-                style: TextStyle(
-                  fontSize: 20,
-                ),
-              ),
-            ),
-            InkWell(
-                onTap: () {
-                  Navigator.pushNamedAndRemoveUntil(context, '/map', (Route<dynamic> route) => false);
-
-                },
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "Mapa",
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(3.0),
-                      ),
-                      Icon(Icons.map),
-                    ],
-                  ),
-                )),
-            InkWell(
-                onTap: null,
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "Dodaj zgłoszenie",
-                        style: TextStyle(
-                          color: Colors.amber,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(3.0),
-                      ),
-                      Icon(
-                        Icons.add,
-                        color: Colors.amber,
-                      ),
-                    ],
-                  ),
-                )),
-            InkWell(
-                onTap: () {
-                  Navigator.pushNamedAndRemoveUntil(context, '/list', (Route<dynamic> route) => false);
-
-                },
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text("Lista zgłoszeń"),
-                      Padding(
-                        padding: EdgeInsets.all(3.0),
-                      ),
-                      Icon(Icons.library_books),
-                    ],
-                  ),
-                )),
-            InkWell(
-                onTap: () {
-                  firebase.auth().signOut();
-                  Navigator.pushNamedAndRemoveUntil(context, '/login', (Route<dynamic> route) => false);
-
-                },
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text("Wyloguj się"),
-                      Padding(
-                        padding: EdgeInsets.all(3.0),
-                      ),
-                      Icon(Icons.exit_to_app),
-                    ],
-                  ),
-                ))
-          ],
-        ),
-      ),
+      drawer: InspectorDrawer(),
       body: ListView(
         children: <Widget>[
           Column(
@@ -170,14 +75,14 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
                           },
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Wprowadź opis zdarzenia';
+                              return 'Enter description';
                             }
                             return null;
                           },
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
                           decoration: InputDecoration(
-                            labelText: 'Opis',
+                            labelText: 'Description',
                           ),
                         ),
                       ),
@@ -189,15 +94,15 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
                           },
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Wprowadź numer telefonu';
+                              return 'Enter phone number';
                             } else if (value.length != 9 ||
                                 double.tryParse(value) == null) {
-                              return 'Niepoprawny numer telefony';
+                              return 'Invalid phone number';
                             }
                             return null;
                           },
                           decoration: InputDecoration(
-                            labelText: 'Numer Telefonu',
+                            labelText: 'Phone number',
                           ),
                         ),
                       ),
@@ -205,18 +110,18 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
                           onSaved: (value) {
-                            adress = value;
+                            address = value;
                           },
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Wprowadź adres';
+                              return 'Enter address';
                             }
                             return null;
                           },
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
                           decoration: InputDecoration(
-                            labelText: 'Adres',
+                            labelText: 'Address',
                           ),
                         ),
                       ),
@@ -226,7 +131,7 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             Text(
-                              "Data: ${DateFormat('yyyy-MM-dd kk:mm').format(selectedDate)}",
+                              "Date: ${DateFormat('yyyy-MM-dd kk:mm').format(selectedDate)}",
                               style: TextStyle(
                                 fontSize: 20.0,
                               ),
@@ -243,7 +148,7 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   onPressed: () => _selectDate(context),
-                                  child: Text('Wybierz datę'),
+                                  child: Text('Select date'),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.all(5.0),
@@ -254,7 +159,7 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   onPressed: () => _selectTime(context),
-                                  child: Text('Wybierz czas'),
+                                  child: Text('Select time'),
                                 ),
                               ],
                             )
@@ -273,7 +178,7 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
                               _sendDataBack(context);
                             }
                           },
-                          child: Text('Wyślij'),
+                          child: Text('Send'),
                         ),
                       ),
                     ],
@@ -293,13 +198,11 @@ class _InspectorInterventionFormState extends State<InspectorInterventionForm> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        // return object of type Dialog
         return AlertDialog(
-          title: new Text("Zgłoszenie wysłane"),
+          title: new Text("Intervention sent"),
           actions: <Widget>[
-            // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text("Zamknij"),
+              child: new Text("Close"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
